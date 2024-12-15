@@ -14,7 +14,7 @@ public class Deathrain extends JavaPlugin {
     public void onEnable() {
         registerCommands();
         registerEvents();
-        
+
         Bukkit.getConsoleSender().sendMessage(
                 MessageUtils.getColoredMessage(prefix + "&aDeathrain Enabled &fVersion: " + version));
     }
