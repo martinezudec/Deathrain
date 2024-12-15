@@ -28,6 +28,9 @@ public class PlayerListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
         event.setDeathMessage(MessageUtils.getColoredMessage("&c" + player.getName() + " &7died"));
+
+
+        MessageUtils.sendTitleToAll("&c" + player.getName() + " &7died", "&7Deathrain is coming", 10, 60, 20);
         player.getWorld().strikeLightningEffect(player.getLocation());
 
         //Ubicacion del jugador
@@ -53,8 +56,20 @@ public class PlayerListener implements Listener {
         if (!overworld.hasStorm()) {
             overworld.setStorm(true);
             remainingTime = stormDuration;
+            long hours = remainingTime / (3600L * 20L);
+            long minutes = (remainingTime % (3600L * 20L)) / (60L * 20L);
+            Bukkit.broadcastMessage(MessageUtils.getColoredMessage(
+                    "&dLa tormenta ha comenzado"));
+            Bukkit.broadcastMessage(MessageUtils.getColoredMessage(
+                    "&7Tiempo restante de tormenta: &c" + hours + " horas y " + minutes + " minutos"));
         } else {
             remainingTime += stormDuration;
+            long hours = remainingTime / (3600L * 20L);
+            long minutes = (remainingTime % (3600L * 20L)) / (60L * 20L);
+            Bukkit.broadcastMessage(MessageUtils.getColoredMessage(
+                    "&dLas muertes alimentan a la tormenta"));
+            Bukkit.broadcastMessage(MessageUtils.getColoredMessage(
+                    "&7Tiempo restante de tormenta: &c" + hours + " horas y " + minutes + " minutos"));
         }
 
 
