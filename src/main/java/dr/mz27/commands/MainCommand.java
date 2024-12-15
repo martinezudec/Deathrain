@@ -82,7 +82,7 @@ public class MainCommand implements CommandExecutor {
     }
 
     public void stopStorm(CommandSender sender) {
-        World overworld = Bukkit.getWorld("world");
+        World overworld = Bukkit.getWorld(plugin.getMainConfigManager().getWorldName());
         if (overworld == null) {
             sender.sendMessage(MessageUtils.getColoredMessage(
                     Deathrain.prefix + "&cOverworld not found. Make sure the main world name is correct."));

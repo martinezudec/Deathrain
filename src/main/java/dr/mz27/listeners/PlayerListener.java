@@ -1,5 +1,6 @@
 package dr.mz27.listeners;
 
+import dr.mz27.Deathrain;
 import dr.mz27.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,6 +18,11 @@ public class PlayerListener implements Listener {
     private static long stormDuration = 3600L * 20L;
     public static long remainingTime = 0L;
     public static BukkitRunnable stormTask;
+    private final Deathrain plugin;
+
+    public PlayerListener(Deathrain plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
@@ -38,7 +44,7 @@ public class PlayerListener implements Listener {
         skull.update();
 
         //Inicio de la Deathrain
-        World overworld = Bukkit.getWorld("world");
+        World overworld = Bukkit.getWorld(plugin.getMainConfigManager().getWorldName());
         if (overworld == null) {
             Bukkit.getLogger().warning("Overworld no encontrado. Asegúrate de que el nombre del mundo principal sea correcto.");
             return;
