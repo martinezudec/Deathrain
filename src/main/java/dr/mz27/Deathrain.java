@@ -22,6 +22,7 @@ public class Deathrain extends JavaPlugin {
     }
 
     public void registerCommands() {
-        getCommand("deathrain").setExecutor(new MainCommand());
+        getCommand("deathrain").setExecutor(new MainCommand(this));
     }
+    public void registerEvents() {}
 }
