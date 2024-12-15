@@ -1,4 +1,3 @@
-// PlayerListener.java
 package dr.mz27.listeners;
 
 import dr.mz27.Deathrain;
@@ -14,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.World;
 
@@ -23,6 +23,7 @@ public class PlayerListener implements Listener {
     public static BukkitRunnable stormTask;
     private final Deathrain plugin;
     private static BossBar bossBar;
+    private static long totalDurationTicks;
 
     public PlayerListener(Deathrain plugin) {
         this.plugin = plugin;
@@ -52,6 +53,13 @@ public class PlayerListener implements Listener {
         startStorm(3600L * 20L); // 1 hora en ticks
     }
 
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        if (bossBar != null && bossBar.isVisible()) {
+            bossBar.addPlayer(event.getPlayer());
+        }
+    }
+
     public void startStorm(long durationTicks) {
         World overworld = Bukkit.getWorld(plugin.getMainConfigManager().getWorldName());
         if (overworld == null) {
@@ -73,6 +81,7 @@ public class PlayerListener implements Listener {
         if (!overworld.hasStorm()) {
             overworld.setStorm(true);
             remainingTime = durationTicks;
+            totalDurationTicks = durationTicks;
             overworld.setWeatherDuration((int) remainingTime);
             long hours = remainingTime / (3600L * 20L);
             long minutes = (remainingTime % (3600L * 20L)) / (60L * 20L);
@@ -82,6 +91,7 @@ public class PlayerListener implements Listener {
                     "&7Tiempo restante de tormenta: &c" + hours + " horas y " + minutes + " minutos"));
         } else {
             remainingTime += durationTicks;
+            totalDurationTicks += durationTicks;
             overworld.setWeatherDuration((int) remainingTime);
             long hours = remainingTime / (3600L * 20L);
             long minutes = (remainingTime % (3600L * 20L)) / (60L * 20L);
@@ -111,11 +121,16 @@ public class PlayerListener implements Listener {
                     Bukkit.broadcastMessage(MessageUtils.getColoredMessage(
                             "&7La tormenta ha terminado"));
                 } else {
+                    // Check if there are any players online
+                    if (Bukkit.getOnlinePlayers().isEmpty()) {
+                        return;
+                    }
+
                     // Reducir tiempo restante
                     remainingTime -= 2 * 20L;
                     messageCooldown -= 2;
 
-                    double progress = (double) remainingTime / durationTicks;
+                    double progress = (double) remainingTime / totalDurationTicks;
                     bossBar.setProgress(progress);
                     overworld.setWeatherDuration((int) remainingTime);
 
@@ -153,5 +168,6 @@ public class PlayerListener implements Listener {
 
         overworld.setStorm(false);
         remainingTime = 0L;
+        totalDurationTicks = 0L;
     }
 }
