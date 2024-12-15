@@ -1,7 +1,71 @@
 package dr.mz27.listeners;
 
+import dr.mz27.utils.MessageUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Skull;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.World;
 
 public class PlayerListener implements Listener {
 
+    private static long stormDuration = 3600L * 20L;
+    private static long remainingTime = 0L;
+    private static BukkitRunnable stormTask;
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        Player player = event.getEntity();
+        event.setDeathMessage(MessageUtils.getColoredMessage("&c" + player.getName() + " &7died"));
+        player.getWorld().strikeLightningEffect(player.getLocation());
+
+        //Ubicacion del jugador
+        Block wallBlock = player.getLocation().getBlock();
+
+        //Muralla de Cobblestone
+        wallBlock.setType(Material.CHISELED_TUFF_BRICKS);
+
+        //Cabeza del jugador en la muralla
+        Block headBlock = wallBlock.getRelative(0, 1, 0);
+        headBlock.setType(Material.PLAYER_HEAD);
+        Skull skull = (Skull) headBlock.getState();
+        skull.setOwningPlayer(player);
+        skull.update();
+
+        //Inicio de la Deathrain
+        if (!player.getWorld().hasStorm()) {
+            player.getWorld().setStorm(true);
+            remainingTime = stormDuration;
+        } else {
+            remainingTime += stormDuration;
+        }
+
+        //Cancelar la tarea si ya esta corriendo
+        if (stormTask != null) {
+            stormTask.cancel();
+        }
+
+        //Programar el final de la tormenta y los mensajes de tiempo restante
+        stormTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (remainingTime <= 0) {
+                    player.getWorld().setStorm(false);
+                    this.cancel();
+                } else {
+                    long hours = remainingTime / (3600L * 20L);
+                    long minutes = (remainingTime % (3600L * 20L)) / (60L * 20L);
+                    Bukkit.broadcastMessage(MessageUtils.getColoredMessage(
+                            "&7Tiempo restante de tormenta: &c" + hours + " horas y " + minutes + " minutos"));
+                    remainingTime -= 60L * 20L;
+                }
+            }
+        };
+        stormTask.runTaskTimer(Bukkit.getPluginManager().getPlugin("Deathrain"), 0L, 60L * 20L);
+    }
 }
