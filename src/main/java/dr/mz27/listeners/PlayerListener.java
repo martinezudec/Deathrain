@@ -58,17 +58,28 @@ public class PlayerListener implements Listener {
         }
 
         stormTask = new BukkitRunnable() {
+            private long messageCooldown = 15; // En minutos
+
             @Override
             public void run() {
                 if (remainingTime <= 0) {
                     overworld.setStorm(false);
                     this.cancel();
-                } else {
-                    long hours = remainingTime / (3600L * 20L);
-                    long minutes = (remainingTime % (3600L * 20L)) / (60L * 20L);
                     Bukkit.broadcastMessage(MessageUtils.getColoredMessage(
-                            "&7Tiempo restante de tormenta: &c" + hours + " horas y " + minutes + " minutos"));
+                            "&7La tormenta ha terminado"));
+                } else {
+                    // Reducir tiempo restante
                     remainingTime -= 60L * 20L;
+                    messageCooldown--;
+
+                    // Mensaje de tiempo restante
+                    if (messageCooldown <= 0) {
+                        long hours = remainingTime / (3600L * 20L);
+                        long minutes = (remainingTime % (3600L * 20L)) / (60L * 20L);
+                        Bukkit.broadcastMessage(MessageUtils.getColoredMessage(
+                                "&7Tiempo restante de tormenta: &c" + hours + " horas y " + minutes + " minutos"));
+                        messageCooldown = 15;
+                    }
                 }
             }
         };
