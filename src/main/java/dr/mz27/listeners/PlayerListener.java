@@ -25,37 +25,43 @@ public class PlayerListener implements Listener {
         player.getWorld().strikeLightningEffect(player.getLocation());
 
         //Ubicacion del jugador
-        Block wallBlock = player.getLocation().getBlock();
+        Block graveBlock = player.getLocation().getBlock();
 
-        //Muralla de Cobblestone
-        wallBlock.setType(Material.CHISELED_TUFF_BRICKS);
+        //Lapida
+        graveBlock.setType(Material.CHISELED_TUFF_BRICKS);
 
         //Cabeza del jugador en la muralla
-        Block headBlock = wallBlock.getRelative(0, 1, 0);
+        Block headBlock = graveBlock.getRelative(0, 1, 0);
         headBlock.setType(Material.PLAYER_HEAD);
         Skull skull = (Skull) headBlock.getState();
         skull.setOwningPlayer(player);
         skull.update();
 
         //Inicio de la Deathrain
-        if (!player.getWorld().hasStorm()) {
-            player.getWorld().setStorm(true);
+        World overworld = Bukkit.getWorld("world");
+        if (overworld == null) {
+            Bukkit.getLogger().warning("Overworld no encontrado. Asegúrate de que el nombre del mundo principal sea correcto.");
+            return;
+        }
+
+        if (!overworld.hasStorm()) {
+            overworld.setStorm(true);
             remainingTime = stormDuration;
         } else {
             remainingTime += stormDuration;
         }
 
-        //Cancelar la tarea si ya esta corriendo
+
+        //Cancelar y reprogramar la tarea
         if (stormTask != null) {
             stormTask.cancel();
         }
 
-        //Programar el final de la tormenta y los mensajes de tiempo restante
         stormTask = new BukkitRunnable() {
             @Override
             public void run() {
                 if (remainingTime <= 0) {
-                    player.getWorld().setStorm(false);
+                    overworld.setStorm(false);
                     this.cancel();
                 } else {
                     long hours = remainingTime / (3600L * 20L);
