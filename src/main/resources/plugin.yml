@@ -1,5 +1,5 @@
 main: dr.mz27.Deathrain
-version: 1.0.2-beta
+version: 1.1.0-beta
 name: Deathrain
 author: Benjamin Martinez
 api-version: 1.21
@@ -9,3 +9,4 @@ commands:
         description: Deathrain command
         aliases:
             - dr
+        usage: /<command> [help|get|stop|start]

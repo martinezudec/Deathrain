@@ -15,8 +15,8 @@ import org.bukkit.World;
 public class PlayerListener implements Listener {
 
     private static long stormDuration = 3600L * 20L;
-    private static long remainingTime = 0L;
-    private static BukkitRunnable stormTask;
+    public static long remainingTime = 0L;
+    public static BukkitRunnable stormTask;
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
