@@ -94,7 +94,7 @@ public class PlayerListener implements Listener {
             Bukkit.broadcastMessage(MessageUtils.getColoredMessage(
                     "&dLa tormenta ha comenzado"));
             Bukkit.broadcastMessage(MessageUtils.getColoredMessage(
-                    "&7Tiempo restante de tormenta: &c" + hours + " horas y " + minutes + " minutos"));
+                    "&7Tiempo restante de tormenta: &c" + String.format("%02d", hours) + " horas y " + String.format("%02d", minutes) + " minutos"));
         } else {
             remainingTime += durationTicks;
             totalDurationTicks += durationTicks;
@@ -104,7 +104,7 @@ public class PlayerListener implements Listener {
             Bukkit.broadcastMessage(MessageUtils.getColoredMessage(
                     "&dLas muertes alimentan a la tormenta"));
             Bukkit.broadcastMessage(MessageUtils.getColoredMessage(
-                    "&7Tiempo restante de tormenta: &c" + hours + " horas y " + minutes + " minutos"));
+                    "&7Tiempo restante de tormenta: &c" + String.format("%02d", hours) + " horas y " + String.format("%02d", minutes) + " minutos"));
         }
 
         plugin.getSleepProhibition().prohibitSleep();
@@ -115,7 +115,10 @@ public class PlayerListener implements Listener {
             @Override
             public void run() {
                 if (bossBar == null) {
-                    bossBar = Bukkit.createBossBar("Deathrain Time Remaining", BarColor.RED, BarStyle.SOLID);
+                    long hours = remainingTime / (3600L * 20L);
+                    long minutes = (remainingTime % (3600L * 20L)) / (60L * 20L);
+                    long seconds = (remainingTime % (60L * 20L)) / 20L;
+                    bossBar = Bukkit.createBossBar("\u00A7fDeathrain: \u00A7a" + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds), BarColor.RED, BarStyle.SOLID);
                     bossBar.setVisible(true);
                     for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                         bossBar.addPlayer(onlinePlayer);
@@ -136,25 +139,29 @@ public class PlayerListener implements Listener {
                     }
 
                     // Reducir tiempo restante
-                    remainingTime -= 2 * 20L;
-                    messageCooldown -= 2;
+                    remainingTime -= 20L;
+                    messageCooldown -= 1;
 
                     double progress = (double) remainingTime / totalDurationTicks;
                     bossBar.setProgress(progress);
+
+                    long hours = remainingTime / (3600L * 20L);
+                    long minutes = (remainingTime % (3600L * 20L)) / (60L * 20L);
+                    long seconds = (remainingTime % (60L * 20L)) / 20L;
+                    bossBar.setTitle("\u00A7fDeathrain: \u00A7a" + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds));
+
                     overworld.setWeatherDuration((int) remainingTime);
 
                     // Mensaje de tiempo restante
                     if (messageCooldown <= 0) {
-                        long hours = remainingTime / (3600L * 20L);
-                        long minutes = (remainingTime % (3600L * 20L)) / (60L * 20L);
                         Bukkit.broadcastMessage(MessageUtils.getColoredMessage(
-                                "&7Tiempo restante de tormenta: &c" + hours + " horas y " + minutes + " minutos"));
+                                "&7Tiempo restante de tormenta: &c" + String.format("%02d", hours) + " horas y " + String.format("%02d", minutes) + " minutos"));
                         messageCooldown = 15 * 60;
                     }
                 }
             }
         };
-        stormTask.runTaskTimer(Bukkit.getPluginManager().getPlugin("Deathrain"), 0L, 2L * 20L);
+        stormTask.runTaskTimer(Bukkit.getPluginManager().getPlugin("Deathrain"), 0L, 20L);
     }
 
     public static void stopStorm(Deathrain plugin) {
