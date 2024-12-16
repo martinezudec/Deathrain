@@ -101,6 +101,8 @@ public class PlayerListener implements Listener {
                     "&7Tiempo restante de tormenta: &c" + hours + " horas y " + minutes + " minutos"));
         }
 
+        plugin.getSleepProhibition().prohibitSleep();
+
         stormTask = new BukkitRunnable() {
             private long messageCooldown = 15 * 60;
 
@@ -118,6 +120,7 @@ public class PlayerListener implements Listener {
                     overworld.setStorm(false);
                     bossBar.setVisible(false);
                     this.cancel();
+                    plugin.getSleepProhibition().allowSleep();
                     Bukkit.broadcastMessage(MessageUtils.getColoredMessage(
                             "&7La tormenta ha terminado"));
                 } else {
@@ -169,5 +172,7 @@ public class PlayerListener implements Listener {
         overworld.setStorm(false);
         remainingTime = 0L;
         totalDurationTicks = 0L;
+
+        plugin.getSleepProhibition().allowSleep();
     }
 }
