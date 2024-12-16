@@ -28,7 +28,7 @@ public class SleepProhibition implements Listener {
     @EventHandler
     public void onPlayerBedEnter(PlayerBedEnterEvent event) {
         Player player = event.getPlayer();
-        player.sendMessage(MessageUtils.getColoredMessage(Deathrain.prefix + "&4Por alguna razon no puedes dormir"));
+        player.sendMessage(MessageUtils.getColoredMessage(Deathrain.prefix + "&4Algun &b&kaweonao&4 se murió, así que no se puede dormir"));
         event.setCancelled(true);
     }
 }
