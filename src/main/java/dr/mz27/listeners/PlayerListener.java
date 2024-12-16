@@ -3,6 +3,7 @@ package dr.mz27.listeners;
 import dr.mz27.Deathrain;
 import dr.mz27.utils.MessageUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Skull;
@@ -16,6 +17,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.World;
+import java.util.Date;
 
 public class PlayerListener implements Listener {
 
@@ -24,6 +26,7 @@ public class PlayerListener implements Listener {
     private final Deathrain plugin;
     private static BossBar bossBar;
     private static long totalDurationTicks;
+    private static Date date = new Date(6969, 12, 31);
 
     public PlayerListener(Deathrain plugin) {
         this.plugin = plugin;
@@ -34,8 +37,11 @@ public class PlayerListener implements Listener {
         Player player = event.getEntity();
         event.setDeathMessage(MessageUtils.getColoredMessage("&c" + player.getName() + " &7died"));
 
+
         MessageUtils.sendTitleToAll("&c" + player.getName() + " &7died", "&7Deathrain is coming", 10, 60, 20);
         player.getWorld().strikeLightningEffect(player.getLocation());
+        player.setGameMode(GameMode.SPECTATOR);
+        player.ban("BalticaBaneado", date, "BaltiDioses", true);
 
         //Ubicacion del jugador
         Block graveBlock = player.getLocation().getBlock();
