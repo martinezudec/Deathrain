@@ -41,7 +41,11 @@ public class PlayerListener implements Listener {
         MessageUtils.sendTitleToAll("&c" + player.getName() + " &7died", "&7Deathrain is coming", 10, 60, 20);
         player.getWorld().strikeLightningEffect(player.getLocation());
         player.setGameMode(GameMode.SPECTATOR);
-        player.ban("BalticaBaneado", date, "BaltiDioses", true);
+        if (plugin.getMainConfigManager().getEliteBans()) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "banip" + player.getName() + "Balticabaneado -s");
+        } else {
+            player.ban("BalticaBaneado", date, "BaltiDioses", true);
+        }
 
         //Ubicacion del jugador
         Block graveBlock = player.getLocation().getBlock();

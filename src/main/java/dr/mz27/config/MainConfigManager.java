@@ -7,6 +7,7 @@ public class MainConfigManager {
     private CustomConfig configFile;
     private Deathrain plugin;
     private String worldName;
+    private Boolean eliteBans;
 
     public MainConfigManager(Deathrain plugin) {
         this.plugin = plugin;
@@ -18,6 +19,7 @@ public class MainConfigManager {
     public void loadConfig() {
         FileConfiguration config = configFile.getConfig();
         worldName = config.getString("config.world-name");
+        eliteBans = config.getBoolean("config.elite-bans");
     }
 
     public void reloadConfig() {
@@ -27,5 +29,9 @@ public class MainConfigManager {
 
     public String getWorldName() {
         return worldName;
+    }
+
+    public Boolean getEliteBans() {
+        return eliteBans;
     }
 }
