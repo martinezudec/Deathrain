@@ -42,7 +42,7 @@ public class PlayerListener implements Listener {
         player.getWorld().strikeLightningEffect(player.getLocation());
         player.setGameMode(GameMode.SPECTATOR);
         if (plugin.getMainConfigManager().getEliteBans()) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "banip" + player.getName() + "Balticabaneado -s");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "litebans:banip" + player.getName() + "Balticabaneado -s");
         } else {
             player.ban("BalticaBaneado", date, "BaltiDioses", true);
         }
