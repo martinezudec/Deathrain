@@ -41,8 +41,14 @@ public class PlayerListener implements Listener {
         MessageUtils.sendTitleToAll("&c" + player.getName() + " &7died", "&7Deathrain is coming", 10, 60, 20);
         player.getWorld().strikeLightningEffect(player.getLocation());
         player.setGameMode(GameMode.SPECTATOR);
-        if (plugin.getMainConfigManager().getEliteBans()) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "litebans:banip" + player.getName() + "Balticabaneado -s");
+
+        if (plugin.getMainConfigManager().getLiteBans()) {
+            if (Bukkit.getPluginManager().isPluginEnabled("LiteBans")) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "litebans:banip " + player.getName() + " Balticabaneado -s");
+            } else {
+                Bukkit.getLogger().warning("LiteBans is not enabled. Make sure the plugin is installed and enabled.");
+                player.ban("BalticaBaneado", date, "BaltiDioses", true);
+            }
         } else {
             player.ban("BalticaBaneado", date, "BaltiDioses", true);
         }
