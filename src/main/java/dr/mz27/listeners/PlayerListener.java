@@ -66,7 +66,7 @@ public class PlayerListener implements Listener {
         skull.setOwningPlayer(player);
         skull.update();
 
-        startStorm(3600L * 20L); // 1 hora en ticks
+        startStorm(3600L * 20L * plugin.getMainConfigManager().getStormMultiplier()); // 1 hora en ticks
     }
 
     @EventHandler

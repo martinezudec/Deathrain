@@ -8,6 +8,7 @@ public class MainConfigManager {
     private Deathrain plugin;
     private String worldName;
     private Boolean liteBans;
+    private int stormMultiplier;
 
     public MainConfigManager(Deathrain plugin) {
         this.plugin = plugin;
@@ -20,6 +21,7 @@ public class MainConfigManager {
         FileConfiguration config = configFile.getConfig();
         worldName = config.getString("config.world-name");
         liteBans = config.getBoolean("config.lite-bans");
+        stormMultiplier = config.getInt("config.storm-duration-hours");
     }
 
     public void reloadConfig() {
@@ -33,5 +35,8 @@ public class MainConfigManager {
 
     public Boolean getLiteBans() {
         return liteBans;
+    }
+    public int getStormMultiplier() {
+        return stormMultiplier;
     }
 }

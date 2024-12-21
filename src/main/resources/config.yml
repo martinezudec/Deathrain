@@ -1,3 +1,4 @@
 config:
   world-name: world
   lite-bans: false
+  storm-duration-hours: 1
